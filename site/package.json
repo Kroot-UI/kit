@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "gatsby clean && rm -rf public && gatsby build --prefix-paths",
-    "deploy:gh": "bash ./tools/deploy-github.sh && mv public ../docs",
+    "deploy:gh": "bash ./tools/deploy-github.sh",
     "develop": "gatsby clean && gatsby develop",
     "seed": "bash ./tools/seed.sh",
     "serve": "gatsby serve",
