@@ -16,3 +16,12 @@
     #   items:
     #     - title: My first docs!
     #       file: my-first-docs.md
+- title: DOCS
+  dir: ./docs
+  url: docs
+  sidemenu:
+    - title: Example
+      dir: example
+      items:
+        - title: My first docs!
+          file: my-first-docs.md
