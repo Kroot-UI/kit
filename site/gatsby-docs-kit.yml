@@ -1,0 +1,18 @@
+- title: Home
+  dir: ./src
+  url: /
+  file: pages/landing.js
+- title: DOCS
+  dir: ./docs
+  url: docs
+  sidemenu:
+    - title: Getting Started
+      dir: getting-started
+      items:
+        - title: Introduction
+          file: introduction.md
+    # - title: Example
+    #   dir: example
+    #   items:
+    #     - title: My first docs!
+    #       file: my-first-docs.md
