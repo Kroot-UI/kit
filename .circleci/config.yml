@@ -16,14 +16,14 @@ jobs:
               echo $branch is not valid because the branch name must match '^(dependabot|fix|feature|breaking)/' or be master
               exit 1
             fi
-  # test:
-  #   docker:
-  #     - image: circleci/node:12.18.2
-  #   working_directory: ~/app
-  #   steps:
-  #     - checkout
-  #     - run: yarn install --non-interactive
-  #     - run: yarn lint
+  test:
+    docker:
+      - image: circleci/node:12.18.2
+    working_directory: ~/app
+    steps:
+      - checkout
+      - run: yarn install --non-interactive
+      # - run: yarn lint
 
   publish_site:
     docker:
