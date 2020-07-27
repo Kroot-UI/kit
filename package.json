@@ -30,7 +30,7 @@
     "build": "",
     "size": "size-limit",
     "clean": "git clean -Xdf",
-    "deploy:docs": "cd site && yarn install && yarn build && yarn deploy:gh",
+    "deploy:docs": "cd site && yarn install && yarn pre:build && yarn build && yarn post:build && yarn deploy:gh",
     "postpublish": "yarn git-branch-is master && yarn deploy-docs"
   },
   "author": "Bogdan Martinescu",

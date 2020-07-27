@@ -5,7 +5,9 @@
   "author": "Brainhub",
   "license": "MIT",
   "scripts": {
-    "build": "gatsby clean && rm -rf public && gatsby build --prefix-paths && cp public ../docs",
+    "pre:build": "rm -rf ../docs",
+    "build": "gatsby clean && rm -rf public && gatsby build --prefix-paths",
+    "post:build": "mv public ../docs",
     "deploy:gh": "bash ./tools/deploy-github.sh",
     "develop": "gatsby clean && gatsby develop",
     "seed": "bash ./tools/seed.sh",
