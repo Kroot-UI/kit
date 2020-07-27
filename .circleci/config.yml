@@ -30,11 +30,7 @@ jobs:
       - image: circleci/node:12.18.2
     steps:
       - checkout
-      - run: cd site
-      - run: ls -a
-      - run: yarn install --non-interactive
-      - run: yarn build
-      - run: yarn deploy:gh
+      - run: yarn deploy:docs
       # - run:
       #     name: configure GitHub user
       #     command: |
