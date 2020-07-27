@@ -1,34 +1,83 @@
 version: 2
 jobs:
-    test:
-        working_directory: ~/kroot-ui
-        docker:
-            - image: circleci/node:10
-        steps:
-            - checkout
+  check_branch_name:
+    docker:
+      - image: circleci/node:12.18.2
+    working_directory: ~/app
+    steps:
+      - run:
+          name: fail if the branch name does not start with a valid prefix
+          command: |
+            branch=$CIRCLE_BRANCH
+            if [[ "$branch" =~ ^(dependabot|fix|feature|breaking)/ || "$branch" == 'master' ]]
+            then
+              echo $branch is a valid name
+            else
+              echo $branch is not valid because the branch name must match '^(dependabot|fix|feature|breaking)/' or be master
+              exit 1
+            fi
+  test:
+    docker:
+      - image: circleci/node:12.18.2
+    working_directory: ~/app
+    steps:
+      - checkout
+      - run: yarn install --non-interactive
+      - run: yarn lint
 
-            - restore_cache:
-                  key: main-dependency-cache-{{ checksum "yarn.lock" }}
-            - run: yarn install --frozen-lockfile
-            - save_cache:
-                  key: main-dependency-cache-{{ checksum "yarn.lock" }}
-                  paths:
-                      - ./node_modules
-
-            - restore_cache:
-                  key: docs-dependency-cache-{{ checksum "docs/yarn.lock" }}
-            - run: yarn install --frozen-lockfile --cwd docs
-            - save_cache:
-                  key: docs-dependency-cache-{{ checksum "docs/yarn.lock" }}
-                  paths:
-                      - ./docs/node_modules
-
-            - run: yarn run build
-            - run: yarn run test
-            - run: yarn run size-limit
-
+  publish_site:
+    docker:
+      - image: circleci/node:12.18.2
+    steps:
+      - checkout
+      - run: cd site && yarn install --non-interactive
+      - run: yarn build
+      - run: yarn deploy:gh
+      - run:
+          name: configure GitHub user
+          command: |
+            git config --global user.email "devops@usekroot.com"
+            git config --global user.name "Kroot DevOps"
+            git remote -v
+            git remote remove origin
+            git remote add origin https://$GIT_TOKEN@github.com/Kroot-UI/react-kit.git
+            git remote -v
+      # - run:
+      #     name: bump NPM version
+      #     command: |
+      #       branch=`git log --oneline | grep '[0-9a-f]\{6,40\} Merge pull request #[0-9]\+ from brainhubeu/' | head -1 | sed 's@.* from brainhubeu/@@g' || true`
+      #       echo branch=$branch
+      #       if [[ "$branch" =~ ^(dependabot)/ ]]; then
+      #         npm version patch -m "%s [ci skip]"
+      #       elif [[ "$branch" =~ ^(fix)/ ]]; then
+      #         npm version patch -m "%s [ci skip]"
+      #       elif [[ "$branch" =~ ^(feature)/ ]]; then
+      #         npm version minor -m "%s [ci skip]"
+      #       elif [[ "$branch" =~ ^(breaking)/ ]]; then
+      #         npm version major -m "%s [ci skip]"
+      #       else
+      #         echo $branch is not valid because the branch name must match '^(dependabot|fix|feature|breaking)/'
+      #         exit 1
+      #       fi
+      - run: git pull --no-edit origin $CIRCLE_BRANCH
+      - run: git push origin $CIRCLE_BRANCH
+      # - run:
+      #     name: npm publish
+      #     command: |
+      #       echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+      #     npm publish
 workflows:
-    version: 2
-    default:
-        jobs:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - check_branch_name
+      - test:
+          requires:
+            - check_branch_name
+      - publish_package:
+          requires:
             - test
+          filters:
+            branches:
+              only:
+                - master
