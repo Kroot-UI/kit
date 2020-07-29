@@ -31,15 +31,15 @@ jobs:
     steps:
       - checkout
       - run: yarn deploy:docs
-      # - run:
-      #     name: configure GitHub user
-      #     command: |
-      #       git config --global user.email "devops@usekroot.com"
-      #       git config --global user.name "Kroot DevOps"
-      #       git remote -v
-      #       git remote remove origin
-      #       git remote add origin https://$GIT_TOKEN@github.com/Kroot-UI/react-kit.git
-      #       git remote -v
+      - run:
+          name: configure GitHub user
+          command: |
+            git config --global user.email "devops@usekroot.com"
+            git config --global user.name "Kroot DevOps"
+            git remote -v
+            git remote remove origin
+            git remote add origin https://$GIT_TOKEN@github.com/Kroot-UI/react-kit.git
+            git remote -v
       # - run:
       #     name: bump NPM version
       #     command: |
@@ -57,8 +57,8 @@ jobs:
       #         echo $branch is not valid because the branch name must match '^(dependabot|fix|feature|breaking)/'
       #         exit 1
       #       fi
-      # - run: git pull --no-edit origin $CIRCLE_BRANCH
-      # - run: git push origin $CIRCLE_BRANCH
+      - run: git pull --no-edit origin $CIRCLE_BRANCH
+      - run: git push origin $CIRCLE_BRANCH
       # - run:
       #     name: npm publish
       #     command: |
