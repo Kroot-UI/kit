@@ -21,7 +21,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "test": "xo && jest --bail && ava",
+    "test": "jest",
     "dev": "start-storybook -p 6006",
     "create-package": "./tools/create-package.js",
     "create-package:components": "./tools/create-package-components.js",
@@ -91,7 +91,7 @@
     "fs-extra": "^7.0.0",
     "git-branch-is": "^3.1.0",
     "husky": "^4.0.10",
-    "jest": "^25.3.0",
+    "jest": "^26.1.0",
     "jscodeshift": "^0.7.0",
     "lint-staged": "^10.0.1",
     "np": "^5.2.1",
@@ -116,10 +116,5 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "<rootDir>tools/test-setup.js"
-    ]
   }
 }
